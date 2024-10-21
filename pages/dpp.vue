@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div class="logo-container">
-        <img src="logo2.png" alt="Logo Pelindo" class="logo" />
+        <!-- <img src="logo2.png" alt="Logo Pelindo" class="logo" /> -->
       </div>
       <h1>DPP (SINGKATAN DPP GATAU APA TULIS AJA "NANTI TANYA MBAK ROSI")</h1>
       <button @click="openAddModal" class="add-button">Add DPP</button>
