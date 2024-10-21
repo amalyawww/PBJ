@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { z } from 'zod'
 import { useRouter } from 'vue-router'
-import { reactive } from 'vue'
+import { Directive, reactive } from 'vue'
 
 // Schema validation
+
 const schema = z.object({
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Must be at least 8 characters')
@@ -84,28 +85,27 @@ async function onSubmit(event: Event) {
 }
 
 .moving-text-container {
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  overflow: hidden;
-  height: 50px;
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    overflow: hidden;
+    height: 50px;
+    white-space: nowrap; /* Mencegah teks terputus */
 }
 
 .moving-text {
-  white-space: nowrap;
-  display: inline-block;
-  animation: moveText 45s linear infinite;
-  color: white;
+    display: inline-block;
+    animation: moveText 50s linear infinite; /* Animasi berjalan */
 }
 
 @keyframes moveText {
-  0% {
-    transform: translateX(100%);
+    0% {
+        transform: translateX(100%); /* Mulai dari luar kanan */
+    }
+    100% {
+        transform: translateX(-100%); /* Bergerak ke luar kiri */
+    }
   }
-  100% {
-    transform: translateX(-100%);
-  }
-}
 
 .login-box {
   background-color: #fff;

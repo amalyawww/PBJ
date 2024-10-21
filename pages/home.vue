@@ -7,6 +7,8 @@
       <header class="flex justify-end p-4">
         <nuxt-link to="/about" class="mr-4 text-lg">About</nuxt-link>
         <nuxt-link to="/database" class="text-lg">Database</nuxt-link>
+        <NuxtLink to="/logout" class="text-white hover:underline ml-4">Log Out</NuxtLink>
+        
       </header>
 
       <!-- Logo Section -->
