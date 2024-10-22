@@ -2,13 +2,13 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "target": "es6",
-    "module": "es2015", // Ubah dari 'commonjs' ke 'es2015'
+    "module": "es2015", 
+    "moduleResolution": "node", // Menambahkan ini untuk resolusi modul
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["api/**/*.ts"],
+  "include": ["api/**/*.ts", "server.ts"],
   "exclude": ["node_modules"]
 }

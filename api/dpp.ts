@@ -1,97 +1,66 @@
-import express from 'express';
-import { Pool } from 'pg';
+import express, { type Request, type Response } from 'express'; // Menggunakan import type
+import fs from 'fs';
+import path from 'path';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
 
-const app = express();
-const router = express.Router();
-app.use(express.json()); // Middleware untuk parsing JSON
 
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'pelindo',
-    password: 'amelcantik',
-    port: 5432,
-});
+const router = express.Router(); // Menggunakan router dari Express
 
-// Get all DPP
-router.get('/', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM dpp');
-        res.status(200).json(result.rows);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error(error.message);
-            res.status(500).json({ error: error.message });
-        } else {
-            console.error("An unknown error occurred");
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
+// Mendefinisikan tipe untuk request body
+interface DppRequestBody {
+  nama: string;
+  pekerjaan: string;
+}
+
+// Endpoint untuk menangani permintaan generate dokumen Word
+router.post('/dpp', (req: Request<{}, {}, DppRequestBody>, res: Response) => {
+  const { nama, pekerjaan } = req.body;
+
+  if (!nama || !pekerjaan) {
+    return res.status(400).send('Nama dan Pekerjaan tidak boleh kosong');
+  }
+
+  // Baca template Word dari direktori /template/
+  const templatePath = path.join(__dirname, '../../template/template.docx');
+
+  fs.readFile(templatePath, 'binary', (err, content) => {
+    if (err) {
+      console.error('Error reading template:', err);
+      return res.status(500).send('Gagal membaca template dokumen');
     }
-});
 
-// Add a DPP
-router.post('/', async (req, res) => {
-    const { nama, jabatan, alamat, perusahaan, deskripsi } = req.body;
+    // Load dokumen template menggunakan PizZip dan Docxtemplater
+    const zip = new PizZip(content);
+    const doc = new Docxtemplater(zip);
+
+    // Ganti placeholder di template dengan data dari request
+    doc.setData({
+      nama: nama,
+      pekerjaan: pekerjaan,
+    });
+
     try {
-        const result = await pool.query(
-            'INSERT INTO dpp (nama, jabatan, alamat, perusahaan, deskripsi) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [nama, jabatan, alamat, perusahaan, deskripsi]
-        );
-        res.status(201).json(result.rows[0]);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error(error.message);
-            res.status(500).json({ error: error.message });
-        } else {
-            console.error("An unknown error occurred");
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
+      // Render dokumen
+      doc.render();
+
+      // Dapatkan buffer hasil dokumen yang sudah dimodifikasi
+      const buffer = doc.getZip().generate({ type: 'nodebuffer' });
+
+      // Set header untuk file download
+      res.setHeader('Content-Disposition', 'attachment; filename=output.docx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      );
+
+      // Kirim file ke client
+      return res.send(buffer);
+    } catch (error) {
+      console.error('Error generating document:', error);
+      return res.status(500).send('Gagal menghasilkan dokumen');
     }
+  });
 });
 
-// Edit a DPP
-router.put('/:id', async (req, res) => {
-    const { id } = req.params;
-    const { nama, jabatan, alamat, perusahaan, deskripsi } = req.body;
-    try {
-        const result = await pool.query(
-            'UPDATE dpp SET nama = $1, jabatan = $2, alamat = $3, perusahaan = $4, deskripsi = $5 WHERE id = $6 RETURNING *',
-            [nama, jabatan, alamat, perusahaan, deskripsi, id]
-        );
-        res.status(200).json(result.rows[0]);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error(error.message);
-            res.status(500).json({ error: error.message });
-        } else {
-            console.error("An unknown error occurred");
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
-    }
-});
-
-// Delete a DPP
-router.delete('/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        await pool.query('DELETE FROM dpp WHERE id = $1', [id]);
-        res.status(204).send();
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error(error.message);
-            res.status(500).json({ error: error.message });
-        } else {
-            console.error("An unknown error occurred");
-            res.status(500).json({ error: "An unknown error occurred" });
-        }
-    }
-});
-
-// Mount the router
-app.use('/api/dpp', router);
-
-// Start the server
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+export default router; // Ekspor router
