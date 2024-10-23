@@ -1,4 +1,3 @@
-
 <template>
   <div class="relative min-h-screen bg-gray-800 text-white">
     <!-- Overlay for better text visibility -->
@@ -8,22 +7,19 @@
         <nuxt-link to="/about" class="mr-4 text-lg">About</nuxt-link>
         <nuxt-link to="/database" class="text-lg">Database</nuxt-link>
         <NuxtLink to="/logout" class="text-white hover:underline ml-4">Log Out</NuxtLink>
-        
       </header>
 
       <!-- Logo Section -->
-      <div class="flex justify-center my-8">
+      <div class="flex justify-center mt-0"> <!-- Set margin-top to 0 to align with navbar -->
         <img 
           src="/logo2.png" 
           alt="Logo" 
-          width="140px" 
+          width="160px" 
           class="spin-vertical"/>
       </div>
 
-
-
       <!-- Title Section -->
-      <div class="text-center my-4">
+      <div class="text-center"> <!-- Reduced margin for title -->
         <h1 class="text-4xl font-bold text-yellow-300">Generate Surat</h1>
       </div>
 
@@ -32,7 +28,7 @@
         <div class="flex justify-center gap-4 p-4">
           <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/SP1')">
             <template #header>
-              <i class="ph-file-text-bold text-3xl text-blue-500"></i> <!-- Icon for DPP -->
+              <i class="ph-file-text-bold text-3xl text-blue-500"></i>
             </template>
             <div>
               <h2 class="text-xl font-semibold">Surat Pesanan</h2>
@@ -41,7 +37,7 @@
 
           <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/sp')">
             <template #header>
-              <i class="ph-file-doc-bold text-3xl text-green-500"></i> <!-- Icon for SP -->
+              <i class="ph-file-doc-bold text-3xl text-green-500"></i>
             </template>
             <div>
               <h2 class="text-xl font-semibold">Surat Perjanjian</h2>
@@ -52,16 +48,16 @@
         <div class="flex justify-center gap-4 p-4">
           <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/sp2')">
             <template #header>
-              <i class="ph-file-doc-bold text-3xl text-yellow-500"></i> <!-- Icon for SP2 -->
+              <i class="ph-file-doc-bold text-3xl text-yellow-500"></i>
             </template>
             <div>
               <h2 class="text-xl font-semibold">Surat Perintah Kerja</h2>
             </div>
           </UCard>
 
-          <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/sp3')">
+          <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/dpp')">
             <template #header>
-              <i class="ph-file-doc-bold text-3xl text-red-500"></i> <!-- Icon for SP3 -->
+              <i class="ph-file-doc-bold text-3xl text-red-500"></i>
             </template>
             <div>
               <h2 class="text-xl font-semibold">DPP</h2>
@@ -81,24 +77,22 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
-
 const router = useRouter()
 </script>
 
 <style>
-  .spin-vertical {
-    animation: spinVertical 5s linear infinite;
-    transform-style: preserve-3d;
-    display: block;
-  }
+.spin-vertical {
+  animation: spinVertical 5s linear infinite;
+  transform-style: preserve-3d;
+  display: block;
+}
 
-  @keyframes spinVertical {
-    0% {
-      transform: rotateY(0deg);
-    }
-    100% {
-      transform: rotateY(360deg);
-    }
+@keyframes spinVertical {
+  0% {
+    transform: rotateY(0deg);
   }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
 </style>
-

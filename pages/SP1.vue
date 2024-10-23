@@ -45,10 +45,10 @@ export default {
   methods: {
     async generateWord() {
       try {
-        const response = await fetch("api/dpp", {
+        const response = await fetch("/api/dpp", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "/application/json",
           },
           body: JSON.stringify({
             nama: this.nama,
