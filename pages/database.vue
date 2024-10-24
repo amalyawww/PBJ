@@ -45,7 +45,7 @@
           <td class="py-2 px-4 border-b border-r">{{ vendor.provider }}</td>
           <td class="py-2 px-4 border-b">
             <UButton @click="editVendor(vendor)" icon="i-heroicons-pencil-square" size="sm" color="yellow" variant="soft" label="Edit Data" trailing/>
-            <button @click="deleteVendor(index)" class="bg-red-500 text-white px-2 py-1 rounded">Hapus</button>
+            <button @click="deleteVendor(index)" class="bg-red-500 text-white px-2 py-1 rounded">Hapus🗑️</button>
           </td>
         </tr>
       </tbody>
