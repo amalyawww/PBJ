@@ -1,133 +1,103 @@
 <template>
   <div>
-    <h2>Form Pengisian Dokumen</h2>
-    <form @submit.prevent="generateDocument">
-      <input v-model="formData.nama" placeholder="nama" required />
-      <button type="button" @click="previewDocument">Preview</button>
-      <button type="submit">Generate Document</button>
+    <h1>Form Penggantian Placeholder</h1>
+    <form @submit.prevent="submitForm">
+      <div>
+        <label for="pekerjaan">Pekerjaan:</label>
+        <input type="text" id="pekerjaan" v-model="pekerjaan" required />
+      </div>
+      <button type="submit">Kirim</button>
     </form>
-
-    <div v-if="previewText">
-      <h3>Preview:</h3>
-      <p>{{ previewText }}</p>
-    </div>
+    <div v-if="loading">Sedang memproses...</div>
+    <div v-if="error" class="error">{{ error }}</div>
+    <div v-if="success" class="success">Penggantian placeholder berhasil!</div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import PizZip from 'pizzip';
-import Docxtemplater from 'docxtemplater';
-import { saveAs } from 'file-saver';
+<script>
+import { google } from 'googleapis';
 
-const formData = ref({
-  nama: '',
-});
-
-const previewText = ref('');
-
-// Fungsi untuk menggantikan placeholder di template Word
-const replacePlaceholders = async (templateFile: ArrayBuffer, data: any) => {
-  const zip = new PizZip(templateFile);
-  const doc = new Docxtemplater(zip, {
-    paragraphLoop: true,
-    linebreaks: true,
-  });
-
-  doc.setData(data);
-
-  try {
-    doc.render();
-  } catch (error) {
-    throw new Error("Error rendering document: " + error.message);
-  }
-
-  const output = doc.getZip().generate({
-    type: 'blob',
-    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  });
-
-  return output;
-};
-
-// Fungsi untuk preview dokumen
-const previewDocument = async () => {
-  try {
-    const templateFile = await fetch('/template/testingside.docx').then((res) => res.arrayBuffer());
-
-    // Data yang akan menggantikan placeholder
-    const data = {
-      nama: formData.value.nama,
+export default {
+  data() {
+    return {
+      pekerjaan: '',
+      loading: false,
+      success: false,
+      error: null,
     };
+  },
+  methods: {
+    async submitForm() {
+      this.loading = true;
+      this.error = null;
+      this.success = false;
 
-    // Proses penggantian placeholder untuk preview
-    const zip = new PizZip(templateFile);
-    const doc = new Docxtemplater(zip, {
-      paragraphLoop: true,
-      linebreaks: true,
-    });
+      try {
+        const auth = new google.auth.GoogleAuth({
+          credentials: {
+            type: "service_account",
+            project_id: process.env.VUE_APP_GOOGLE_PROJECT_ID,
+            private_key_id: process.env.VUE_APP_GOOGLE_PRIVATE_KEY_ID,
+            private_key: process.env.VUE_APP_GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            client_email: process.env.VUE_APP_GOOGLE_CLIENT_EMAIL,
+            client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
+            auth_uri: "https://accounts.google.com/o/oauth2/auth",
+            token_uri: "https://oauth2.googleapis.com/token",
+            auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+            client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.VUE_APP_GOOGLE_CLIENT_EMAIL}`,
+          },
+          scopes: ['https://www.googleapis.com/auth/documents'],
+        });
 
-    doc.setData(data);
-    doc.render();
+        const docs = google.docs({ version: 'v1', auth });
+        const documentId = '1CquQ_0U9gJ3ub-MkO3EyT8cb0tqVSHcBX3-Fo3q_oNs'; // ID for the Google Doc
 
-    // Ambil isi dokumen setelah render untuk preview
-    const outputText = doc.getFullText();
-    previewText.value = outputText.replace(/<<nama>>/g, data.nama); // Gantikan placeholder dengan inputan
+        // Ganti placeholder
+        await docs.documents.batchUpdate({
+          documentId,
+          requestBody: {
+            requests: [
+              {
+                replaceAllText: {
+                  replaceText: this.pekerjaan,
+                  containsText: {
+                    text: '<<Pekerjaan_UP>>',
+                    matchCase: true,
+                  },
+                },
+              },
+            ],
+          },
+        });
 
-  } catch (error) {
-    console.error("Failed to preview document:", error);
-  }
-};
+        // Save to Google Drive
+        const drive = google.drive({ version: 'v3', auth });
+        const fileId = '10tQ_a-qimwiXVRqFlol5UVF2orCxB1ZP'; // ID for Google Drive folder
+        await drive.files.create({
+          requestBody: {
+            name: 'Hasil Penggantian',
+            mimeType: 'application/vnd.google-apps.document',
+            parents: [fileId], // Specify the parent folder ID
+          },
+          fields: 'id',
+        });
 
-// Fungsi untuk generate dokumen
-const generateDocument = async () => {
-  try {
-    const templateFile = await fetch('/template/testingside.docx').then((res) => res.arrayBuffer());
-
-    // Data yang akan menggantikan placeholder
-    const data = {
-      nama: formData.value.nama,
-    };
-
-    // Proses penggantian placeholder dan generate dokumen
-    const generatedDoc = await replacePlaceholders(templateFile, data.nama);
-
-    // Debugging: Cetak hasil akhir dokumen yang akan diunduh
-    console.log("Generated Document Data:", data);
-
-    // Unduh dokumen yang sudah digenerate
-    saveAs(generatedDoc, 'Generated_Document.docx');
-  } catch (error) {
-    console.error("Failed to generate document:", error);
-  }
+        this.success = true;
+      } catch (err) {
+        this.error = 'Terjadi kesalahan: ' + err.message;
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
-h2 {
-  margin-bottom: 20px;
+.error {
+  color: red;
 }
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input {
-  padding: 8px;
-  font-size: 16px;
-}
-
-button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
+.success {
+  color: green;
 }
 </style>
