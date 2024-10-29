@@ -9,6 +9,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["api/**/*.ts", "server.ts"],
+  "include": ["api/**/*.ts", "custom.d.ts"],
   "exclude": ["node_modules"]
 }
