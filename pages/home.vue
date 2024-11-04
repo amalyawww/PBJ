@@ -1,16 +1,12 @@
 <template>
   <div class="relative min-h-screen bg-gray-800 text-white">
+    <!-- Header Section -->
+    <Header />
+
     <!-- Overlay for better text visibility -->
     <div class="relative z-10">
-      <!-- Header Section -->
-      <header class="flex justify-end p-4">
-        <nuxt-link to="/about" class="mr-4 text-lg">About</nuxt-link>
-        <nuxt-link to="/database" class="text-lg">Database</nuxt-link>
-        <NuxtLink to="/logout" class="text-white hover:underline ml-4">Log Out</NuxtLink>
-      </header>
-
       <!-- Logo Section -->
-      <div class="flex justify-center mt-0"> <!-- Set margin-top to 0 to align with navbar -->
+      <div class="flex justify-center mt-0">
         <img 
           src="/logo2.png" 
           alt="Logo" 
@@ -19,7 +15,7 @@
       </div>
 
       <!-- Title Section -->
-      <div class="text-center"> <!-- Reduced margin for title -->
+      <div class="text-center">
         <h1 class="text-4xl font-bold text-yellow-300">Generate Surat</h1>
       </div>
 
@@ -76,6 +72,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import Header from '/pages/header.vue' // Pastikan jalur impor sesuai dengan struktur proyek Anda
 
 const router = useRouter()
 </script>

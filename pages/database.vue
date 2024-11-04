@@ -1,141 +1,92 @@
 <template>
-  <div class="database">
-    <h1>Data Table</h1>
-    <input
-      type="text"
-      v-model="searchQuery"
-      placeholder="Search by name or job title..."
-      class="search-bar"
-    />
-
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama</th>
-          <th>Jabatan</th>
-          <th>Instansi</th>
-          <th>Alamat</th>
-          <th>Kota</th>
-          <th>SK</th>
-          <th>No_Telp_P1</th>
-          <th>Website_P1</th>
-          <th>Faksimili_P1</th>
-          <th>Email_P1</th>
-          <th>Email_Outlook</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in filteredData" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ row[0] }}</td> <!-- B -->
-          <td>{{ row[1] }}</td> <!-- C -->
-          <td>{{ row[2] }}</td> <!-- D -->
-          <td>{{ row[3] }}</td> <!-- E -->
-          <td>{{ row[4] }}</td> <!-- F -->
-          <td>{{ row[5] }}</td> <!-- G -->
-          <td>{{ row[6] }}</td> <!-- H -->
-          <td>{{ row[7] }}</td> <!-- I -->
-          <td>{{ row[8] }}</td> <!-- J -->
-          <td>{{ row[9] }}</td> <!-- K -->
-          <td>{{ row[10] }}</td> <!-- L -->
-        </tr>
-      </tbody>
-    </table>
+  <div>
+    <Header /> <!-- Tambahkan komponen Header di sini -->
+    <div class="container">
+      <h1 class="title">Database</h1>
+      <div class="button-container">
+        <button class="animated-button" @click="goToPejabat">Data Pejabat</button>
+        <button class="animated-button" @click="goToVendor">Data Vendor</button>
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
-import { google } from 'googleapis';
-import googleapis_docs from '@googleapis/docs';
-import { defineEventHandler, readBody } from 'h3';
+<script>
+import Header from './header.vue'; // Pastikan mengimpor komponen Header
 
-export default defineComponent({
-  name: 'DataTable',
-  setup() {
-    const searchQuery = ref('');
-    const data = ref([]);
-    const filteredData = computed(() => {
-      if (!searchQuery.value) return data.value;
-      const query = searchQuery.value.toLowerCase();
-      return data.value.filter((row) =>
-        row.some((cell) => cell.toLowerCase().includes(query))
-      );
-    });
-
-    const fetchSheetData = async () => {
-      const sheets = google.sheets('v4');
-      const auth = new google.auth.GoogleAuth({
-        credentials: {
-          "type": "service_account",
-          "project_id": "pbjpelindo",
-          "private_key_id": "edf00c027cdc2666e659c5152885937e574572b2",
-          "private_key": "YOUR_PRIVATE_KEY_HERE",
-          "client_email": "testpjb@pbjpelindo.iam.gserviceaccount.com",
-          "client_id": "101754866875342377618",
-          "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-          "token_uri": "https://oauth2.googleapis.com/token",
-          "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-          "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/testpjb%40pbjpelindo.iam.gserviceaccount.com"
-        },
-        scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-      });
-
-      try {
-        const client = await auth.getClient();
-        const spreadsheetId = 'YOUR_SHEET_ID'; // Fill in your Sheet ID
-        const range = 'Sheet1!B2:L'; // Adjust range if necessary
-        const response = await sheets.spreadsheets.values.get({
-          auth: client,
-          spreadsheetId,
-          range,
-        });
-        data.value = response.data.values || [];
-      } catch (error) {
-        console.error('Error fetching data from Google Sheets:', error);
-      }
-    };
-
-    onMounted(() => {
-      fetchSheetData();
-    });
-
-    return {
-      searchQuery,
-      filteredData,
-    };
+export default {
+  components: {
+    Header, // Daftarkan komponen Header di sini
   },
-});
+  methods: {
+    goToPejabat() {
+      this.$router.push('/pejabat');
+    },
+    goToVendor() {
+      this.$router.push('/vendor');
+    },
+  },
+};
 </script>
 
 <style scoped>
-.database {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Pusatkan secara vertikal */
+  align-items: center; /* Pusatkan secara horizontal */
+  height: 90vh; /* Sesuaikan tinggi untuk memberi ruang bagi header */
+  font-family: 'Poppins', sans-serif; /* Menggunakan font Poppins */
 }
-.search-bar {
-  margin-bottom: 20px;
-  padding: 10px;
-  width: 100%;
-  max-width: 300px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+
+.title {
+  font-size: 48px; /* Ukuran font besar untuk judul */
+  font-weight: 600; /* Bobot font yang lebih tebal */
+  margin-bottom: 30px; /* Jarak antara judul dan tombol */
+  text-align: center; /* Teks di tengah */
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
+
+.button-container {
+  display: flex;
+  gap: 20px; /* Jarak antar tombol */
 }
-th, td {
-  padding: 12px;
-  text-align: left;
-  border: 1px solid #ddd;
+
+.animated-button {
+  background: linear-gradient(135deg, #4A90E2, #FFFFFF); /* Gradien biru ke putih */
+  border: none; /* Hapus border */
+  color: white; /* Warna teks */
+  padding: 15px 32px; /* Padding tombol */
+  text-align: center; /* Teks di tengah */
+  text-decoration: none; /* Hapus garis bawah */
+  display: inline-block; /* Untuk mendukung margin */
+  font-size: 16px; /* Ukuran font */
+  margin: 4px 2px; /* Margin */
+  cursor: pointer; /* Kursor pointer */
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Transisi */
+  border-radius: 5px; /* Sudut melengkung */
+  color: #FFFFFF; /* Warna teks putih */
 }
-th {
-  background-color: #f4f4f4;
+
+.animated-button:hover {
+  transform: translateY(-5px) scale(1.05); /* Gerakan ke atas dan sedikit membesar saat hover */
 }
-tr:nth-child(even) {
-  background-color: #f9f9f9;
+
+.animated-button:active {
+  transform: translateY(2px); /* Gerakan ke bawah saat ditekan */
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animated-button {
+  animation: buttonPulse 2s infinite; /* Efek gerakan berulang */
 }
 </style>

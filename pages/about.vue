@@ -1,12 +1,6 @@
 <template>
   <div class="container mx-auto py-6">
-    <nav class="flex justify-between mb-4 w-full">
-      <NuxtLink to="/home" class="text-white hover:underline">Home</NuxtLink>
-      <div>
-        <NuxtLink to="/logout" class="text-white hover:underline mr-4">Log Out</NuxtLink>
-        <NuxtLink to="/database" class="text-white hover:underline">Database</NuxtLink>
-      </div>
-    </nav>
+    <Header /> <!-- Komponen Header sebagai navigasi utama -->
 
     <h1 class="text-white text-3xl font-bold mb-4 text-center">Informasi Pengadaan Barang dan Jasa Pelindo Regional 3</h1>
     <p class="text-gray-300 mb-4 text-center">
@@ -20,7 +14,6 @@
       <div v-for="(faq, index) in faqs" :key="index" class="faq-item" @click="toggleFAQ(index)">
         <div class="faq-header flex justify-between items-center p-4 bg-gray-700 rounded-lg cursor-pointer">
           <span class="faq-icon text-blue-400 mr-2"></span>
-           
           <span class="faq-number text-yellow-400 font-bold">{{ index + 1 }}</span>
           <span class="faq-question text-white">{{ faq.question }}</span>
           <span class="faq-toggle text-white">{{ faq.open ? '-' : '+' }}</span>
@@ -41,81 +34,77 @@
 </template>
 
 <script>
+import Header from './header.vue'; // Pastikan path ke komponen Header benar
+
 export default {
   name: 'About',
+  components: {
+    Header,
+  },
   data() {
     return {
       faqs: [
         {
           question: "Apa itu Surat Pesanan?",
-          answer: "Surat Pesanan adalah dokumen yang digunakan untuk pengadaan barang dan jasa dengan nilai <= 500 juta."
+          answer: "Surat Pesanan adalah dokumen yang digunakan untuk pengadaan barang dan jasa dengan nilai <= 500 juta.",
         },
         {
           question: "Apa itu Surat Perintah Kerja?",
-          answer: "Surat Perintah Kerja digunakan untuk pengadaan barang dan jasa dengan nilai antara 500 juta hingga 1 M."
+          answer: "Surat Perintah Kerja digunakan untuk pengadaan barang dan jasa dengan nilai antara 500 juta hingga 1 M.",
         },
         {
           question: "Apa itu Surat Perjanjian?",
-          answer: "Surat Perjanjian digunakan untuk pengadaan barang dan jasa dengan nilai > 1 M hingga 10 M."
+          answer: "Surat Perjanjian digunakan untuk pengadaan barang dan jasa dengan nilai > 1 M hingga 10 M.",
         },
-        // Add more FAQs as needed
       ],
     };
   },
   methods: {
     toggleFAQ(index) {
       this.faqs[index].open = !this.faqs[index].open;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
 .container {
-  background-color: #1f2937; /* Background color */
-  padding: 20px; /* Padding for container */
- /* Rounded corners */
-  min-height: 100vh; /* Full screen height */
-  width: 100%; /* Full width */
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  background-color: #1f2937;
+  padding: 20px;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .faq-container {
-  margin: 20px auto; /* Center the FAQ container */
+  margin: 20px auto;
 }
 
 .faq-item {
-  margin-bottom: 10px; /* Space between FAQ items */
-  transition: all 0.5s ease; /* Smooth transition for animations */
+  margin-bottom: 10px;
+  transition: all 0.5s ease;
 }
 
 .faq-header {
-  background-color: #4b5563; /* Header background color */
-  position: relative; /* Position relative for animations */
-  overflow: hidden; /* Prevent overflow of content */
+  background-color: #4b5563;
+  position: relative;
+  overflow: hidden;
 }
 
 .faq-answer {
-  background-color: #2d3748; /* Answer background color */
+  background-color: #2d3748;
 }
 
 .faq-number {
-  min-width: 30px; /* Fixed width for number */
-}
-
-.faq-icon {
-  position: absolute; /* Position icon to the left */
-  left: 10px;
-  top: 50%;
-  /* transform: translateY(-50%); */
+  min-width: 30px;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s, transform 0.5s; /* Smooth transition for opacity and transform */
+  transition: opacity 0.5s, transform 0.5s;
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+.fade-enter, .fade-leave-to {
   opacity: 0;
-  transform: translateY(-10px); /* Slide effect */
+  transform: translateY(-10px);
 }
 </style>

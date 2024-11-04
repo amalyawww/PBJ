@@ -1,73 +1,47 @@
 <template>
-  <nav class="flex justify-between mb-4 w-full">
-        <NuxtLink to="/home" class="text-white hover:underline">Home</NuxtLink>
-        <div>
-          <NuxtLink to="/logout" class="text-white hover:underline mr-4">Log Out</NuxtLink>
-          <NuxtLink to="/database" class="text-white hover:underline">Database</NuxtLink>
-        </div>
-      </nav>
-  <div class="container">
-    <h2>Generate Surat Word</h2>
-    <form @submit.prevent="generateWord">
-      <div class="form-group">
-        <label for="nama">Nama:</label>
+  <div>
+    <h1>Form Surat Penetapan</h1>
+    <form @submit.prevent="generateSurat">
+      <div v-for="(field, index) in fields" :key="index">
+        <label :for="field.name">{{ field.label }}</label>
         <input
           type="text"
-          id="nama"
-          v-model="nama"
-          class="form-control"
+          :id="field.name"
+          v-model="formData[field.name]"
           required
         />
       </div>
-      <div class="form-group">
-        <label for="pekerjaan">Pekerjaan:</label>
-        <input
-          type="text"
-          id="pekerjaan"
-          v-model="pekerjaan"
-          class="form-control"
-          required
-        />
-      </div>
-      <button type="submit" class="btn btn-primary">Generate Word</button>
+      <button type="submit">Generate Surat</button>
     </form>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      nama: "", // Variabel untuk menyimpan input nama
-      pekerjaan: "", // Variabel untuk menyimpan input pekerjaan
+      formData: {
+        Nomor_SP3: '',
+        Jenis_Tender_UP: '',
+      },
+      fields: [
+        { name: 'Nomor_SP3', label: 'Nomor SP3' },
+        { name: 'Jenis_Tender_UP', label: 'Jenis Tender UP' },
+      ],
     };
   },
+  
   methods: {
-    async generateWord() {
+    async generateSurat() {
+      console.log('Form data before sending:', this.formData); // Log data yang akan dikirim
       try {
-        const response = await fetch("/api/dpp", {
-          method: "POST",
-          headers: {
-            "Content-Type": "/application/json",
-          },
-          body: JSON.stringify({
-            nama: this.nama,
-            pekerjaan: this.pekerjaan,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Error generating document");
-        }
-
-        const blob = await response.blob();
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = "output.docx"; // Nama file hasil download
-        link.click();
+        const response = await axios.post('/api/generate-surat', this.formData);
+        console.log('Dokumen berhasil di-generate:', response.data);
+        alert(`Dokumen berhasil dibuat.`);
       } catch (error) {
-        console.error("Error:", error);
-        alert("Gagal menghasilkan dokumen Word.");
+        console.error('Error generating document:', error);
       }
     },
   },
@@ -75,17 +49,5 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.btn {
-  margin-top: 10px;
-}
+/* Tambahkan style jika perlu */
 </style>
