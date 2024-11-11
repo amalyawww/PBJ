@@ -16,7 +16,7 @@
 
       <!-- Title Section -->
       <div class="text-center">
-        <h1 class="text-4xl font-bold text-yellow-300">Generate Surat</h1>
+        <h1 class="text-4xl font-bold text-white">Generate Surat</h1>
       </div>
 
       <!-- Card Section -->

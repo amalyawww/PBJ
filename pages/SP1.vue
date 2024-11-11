@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <h1>Form Surat Penetapan</h1>
     <form @submit.prevent="generateSurat">
@@ -40,6 +40,35 @@ export default {
         const response = await axios.post('/api/generate-surat', this.formData);
         console.log('Dokumen berhasil di-generate:', response.data);
         alert(`Dokumen berhasil dibuat.`);
+      } catch (error) {
+        console.error('Error generating document:', error);
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* Tambahkan style jika perlu */
+</style> -->
+
+<template>
+  <div>
+    <h1>Generate Surat Penetapan</h1>
+    <button @click="generateSurat">Generate Surat</button>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  methods: {
+    async generateSurat() {
+      try {
+        const response = await axios.post('/api/generate-surat');
+        console.log('Dokumen berhasil di-generate:', response.data);
+        alert('Dokumen berhasil dibuat.');
       } catch (error) {
         console.error('Error generating document:', error);
       }
