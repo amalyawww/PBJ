@@ -22,7 +22,7 @@
       <!-- Card Section -->
       <div class="flex flex-col items-center">
         <div class="flex justify-center gap-4 p-4">
-          <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/SP1')">
+          <UCard class="hover:shadow-2xl h-40 w-64 text-center bg-white text-gray-800 mx-auto border-2 border-transparent transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]" @click="$router.push('/SP1e')">
             <template #header>
               <i class="ph-file-text-bold text-3xl text-blue-500"></i>
             </template>

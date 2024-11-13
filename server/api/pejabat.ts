@@ -14,12 +14,11 @@ export default defineEventHandler(async () => {
     // Inisialisasi Google Sheets API
     const sheets = google.sheets({ version: 'v4', auth });
     const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: '11JxWxCeF6e6En5FnOSo0li7wmWOEuJWbt3sgBh-qWk8', // Contoh Spreadsheet ID
-        range: 'Data Pejabat!A1:L',
-        
+      spreadsheetId: '11JxWxCeF6e6En5FnOSo0li7wmWOEuJWbt3sgBh-qWk8', // Contoh Spreadsheet ID
+      range: 'Data Pejabat!A1:L',
     });
 
-    return response.data.values;
+    return response.data.values as string[][]; // Menambahkan tipe untuk values
   } catch (error) {
     console.error("Error fetching Google Sheets data:", error);
     return { error: 'Unable to fetch data from Google Sheets.' };

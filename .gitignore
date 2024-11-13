@@ -23,5 +23,5 @@ logs
 .env.*
 !.env.example
 
-# Folder 
+# Ignore credentials file
 credentials.json
