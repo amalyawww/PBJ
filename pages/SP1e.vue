@@ -23,9 +23,6 @@ type Schema = z.output<typeof SuratFormInputSchema>
 
 // 
 const state = reactive({
-  name: '',
-  companyName: '',
-  companyAddress: '',
   Nomor_SP3: '',
   Jenis_Tender_UP: '',
   Pekerjaan_UP: '',
@@ -36,15 +33,22 @@ const state = reactive({
   Alamat_P2: '',
   NPWP_P2: '',
   Biaya_Pekerjaan: 0,
-  Terbilang_Biaya_Pekerjaan: '',
+  terbilang_1: '',
   Jangka_Waktu_Pelaksanaan: 0,
-  Terbilang_Jangka_Waktu_Pelaksanaan: '',
+  terbilang_2: '',
   Jangka_Waktu_Pemeliharaan: 0,
-  Terbilang_Jangka_Waktu_Pemeliharaan: '',
+  terbilang_3: '',
   TKDN: 0,
   Terbilang_TKDN: '',
   Tanggal_Penetapan: '',
+  Perdir_PBJ: '',
+  Nomor_Nodin: '',
+  Tanggal_Nodin: '',
 });
+
+
+
+
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const result = await $fetch('/api/generate-surat', {
@@ -58,78 +62,91 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <div class="max-w-screen-lg mx-auto">
     <UForm :schema="SuratFormInputSchema" :state="state" class="space-y-4" @submit.prevent="onSubmit">
-  <UFormGroup label="Nomor SP3" name="Nomor_SP3">
-    <UInput v-model="state.Nomor_SP3" />
-  </UFormGroup>
+      
+      <UFormGroup label="Nomor SP3" name="Nomor_SP3">
+        <UInput v-model="state.Nomor_SP3" />
+      </UFormGroup>
 
-  <UFormGroup label="Jenis Tender UP" name="Jenis_Tender_UP">
-    <UInput v-model="state.Jenis_Tender_UP" />
-  </UFormGroup>
+      <UFormGroup label="Jenis Tender KAPITAL" name="Jenis_Tender_UP">
+        <UInput v-model="state.Jenis_Tender_UP" />
+      </UFormGroup>
 
-  <UFormGroup label="Pekerjaan UP" name="Pekerjaan_UP">
-    <UInput v-model="state.Pekerjaan_UP" />
-  </UFormGroup>
+      <UFormGroup label="Nama Pekerjaan KAPITAL" name="Pekerjaan_UP">
+        <UInput v-model="state.Pekerjaan_UP" />
+      </UFormGroup>
 
-  <UFormGroup label="Tanggal Email" name="Tanggal_Email">
-    <UInput type="date" v-model="state.Tanggal_Email" />
-  </UFormGroup>
+      <UFormGroup label="Tanggal Email" name="Tanggal_Email">
+        <UInput type="date" v-model="state.Tanggal_Email" />
+      </UFormGroup>
 
-  <UFormGroup label="Jenis Tender" name="Jenis_Tender">
-    <UInput v-model="state.Jenis_Tender" />
-  </UFormGroup>
+      <UFormGroup label="Jenis Tender" name="Jenis_Tender">
+        <UInput v-model="state.Jenis_Tender" />
+      </UFormGroup>
 
-  <UFormGroup label="Pekerjaan" name="Pekerjaan">
-    <UInput v-model="state.Pekerjaan" />
-  </UFormGroup>
+      <UFormGroup label="Pekerjaan" name="Pekerjaan">
+        <UInput v-model="state.Pekerjaan" />
+      </UFormGroup>
 
-  <UFormGroup label="Perusahaan P2" name="Perusahaan_P2">
-    <UInput v-model="state.Perusahaan_P2" />
-  </UFormGroup>
+      <UFormGroup label="Perusahaan Pihak Kedua" name="Perusahaan_P2">
+        <UInput v-model="state.Perusahaan_P2" />
+      </UFormGroup>
 
-  <UFormGroup label="Alamat P2" name="Alamat_P2">
-    <UInput v-model="state.Alamat_P2" />
-  </UFormGroup>
+      <UFormGroup label="Alamat Pihak Kedua" name="Alamat_P2">
+        <UInput v-model="state.Alamat_P2" />
+      </UFormGroup>
 
-  <UFormGroup label="NPWP P2" name="NPWP_P2">
-    <UInput v-model="state.NPWP_P2" />
-  </UFormGroup>
+      <UFormGroup label="NPWP Pihak Kedua" name="NPWP_P2">
+        <UInput v-model="state.NPWP_P2" />
+      </UFormGroup>
 
-  <UFormGroup label="Biaya Pekerjaan" name="Biaya_Pekerjaan">
-    <UInput v-model="state.Biaya_Pekerjaan" />
-  </UFormGroup>
+      <UFormGroup label="Biaya Pekerjaan" name="Biaya_Pekerjaan">
+        <UInput v-model="state.Biaya_Pekerjaan" />
+      </UFormGroup>
 
-  <UFormGroup label="Terbilang Biaya Pekerjaan" name="Terbilang_Biaya_Pekerjaan">
-    <UInput v-model="state.Terbilang_Biaya_Pekerjaan" />
-  </UFormGroup>
+      <UFormGroup label="Terbilang Biaya Pekerjaan" name="terbilang_1">
+        <UInput v-model="state.terbilang_1" />
+      </UFormGroup>
 
-  <UFormGroup label="Jangka Waktu Pelaksanaan" name="Jangka_Waktu_Pelaksanaan">
-    <UInput v-model="state.Jangka_Waktu_Pelaksanaan" />
-  </UFormGroup>
+      <UFormGroup label="Jangka Waktu Pelaksanaan" name="Jangka_Waktu_Pelaksanaan">
+        <UInput v-model="state.Jangka_Waktu_Pelaksanaan" />
+      </UFormGroup>
 
-  <UFormGroup label="Terbilang Jangka Waktu Pelaksanaan" name="Terbilang_Jangka_Waktu_Pelaksanaan">
-    <UInput v-model="state.Terbilang_Jangka_Waktu_Pelaksanaan" />
-  </UFormGroup>
+      <UFormGroup label="Terbilang Jangka Waktu Pelaksanaan" name="terbilang_2">
+        <UInput v-model="state.terbilang_2" />
+      </UFormGroup>
 
-  <UFormGroup label="Jangka Waktu Pemeliharaan" name="Jangka_Waktu_Pemeliharaan">
-    <UInput v-model="state.Jangka_Waktu_Pemeliharaan" />
-  </UFormGroup>
+      <UFormGroup label="Jangka Waktu Pemeliharaan" name="Jangka_Waktu_Pemeliharaan">
+        <UInput v-model="state.Jangka_Waktu_Pemeliharaan" />
+      </UFormGroup>
 
-  <UFormGroup label="Terbilang Jangka Waktu Pemeliharaan" name="Terbilang_Jangka_Waktu_Pemeliharaan">
-    <UInput v-model="state.Terbilang_Jangka_Waktu_Pemeliharaan" />
-  </UFormGroup>
+      <UFormGroup label="Terbilang Jangka Waktu Pemeliharaan" name="terbilang_3">
+        <UInput v-model="state.terbilang_3" />
+      </UFormGroup>
 
-  <UFormGroup label="TKDN" name="TKDN">
-    <UInput v-model="state.TKDN" />
-  </UFormGroup>
+      <UFormGroup label="TKDN" name="TKDN">
+        <UInput v-model="state.TKDN" />
+      </UFormGroup>
 
-  <UFormGroup label="Terbilang TKDN" name="Terbilang_TKDN">
-    <UInput v-model="state.Terbilang_TKDN" />
-  </UFormGroup>
+      <UFormGroup label="Terbilang TKDN" name="Terbilang_TKDN">
+        <UInput v-model="state.Terbilang_TKDN" />
+      </UFormGroup>
 
-  <UFormGroup label="Tanggal Penetapan" name="Tanggal_Penetapan">
-    <UInput type="date" v-model="state.Tanggal_Penetapan" />
-  </UFormGroup>
+      <UFormGroup label="Tanggal Penetapan" name="Tanggal_Penetapan">
+        <UInput type="date" v-model="state.Tanggal_Penetapan" />
+      </UFormGroup>
 
+      <!-- Menambahkan input baru -->
+      <UFormGroup label="Nomor Perdir PBJ" name="Perdir_PBJ">
+        <UInput v-model="state.Perdir_PBJ" />
+      </UFormGroup>
+
+      <UFormGroup label="Nomor Nota Dinas" name="Nomor_Nodin">
+        <UInput v-model="state.Nomor_Nodin" />
+      </UFormGroup>
+
+      <UFormGroup label="Tanggal Nota Dinas" name="Tanggal_Nodin">
+        <UInput type="date" v-model="state.Tanggal_Nodin" />
+      </UFormGroup>
 
       <UButton type="submit">
         Submit
