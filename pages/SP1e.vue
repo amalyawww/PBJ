@@ -15,7 +15,7 @@ const nama = "amel"
 
 // form
 import { z } from 'zod'
-import type { FormSubmitEvent } from '#ui/types'
+import type { FormSubmitEvent } from '@unhead/schema'
 import { reactive } from 'vue';
 
 
@@ -23,22 +23,24 @@ type Schema = z.output<typeof SuratFormInputSchema>
 
 // 
 const state = reactive({
+  selectedOption: '', // Menyimpan pilihan dari dropdown
+  dropdownOptions: [], // Menyimpan data yang diambil dari Google Sheets
   Nomor_SP3: '',
   Jenis_Tender_UP: '',
   Pekerjaan_UP: '',
   Tanggal_Email: '',
   Jenis_Tender: '',
   Pekerjaan: '',
-  Perusahaan_P2: '',
   Alamat_P2: '',
   NPWP_P2: '',
-  Biaya_Pekerjaan: 0,
+  // Biaya_Pekerjaan: '',
+  Biaya_Pekerjaan: null as number | null,
   terbilang_1: '',
-  Jangka_Waktu_Pelaksanaan: 0,
+  Jangka_Waktu_Pelaksanaan: null as number | null,
   terbilang_2: '',
-  Jangka_Waktu_Pemeliharaan: 0,
+  Jangka_Waktu_Pemeliharaan: null as number | null,
   terbilang_3: '',
-  TKDN: 0,
+  TKDN: null as number | null,
   Terbilang_TKDN: '',
   Tanggal_Penetapan: '',
   Perdir_PBJ: '',
@@ -46,10 +48,116 @@ const state = reactive({
   Tanggal_Nodin: '',
 });
 
+function numberToWords(n: number): string {
+  const words: string[] = [
+    'nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan',
+    'sepuluh', 'sebelas'
+  ];
+
+  if (n < 12) {
+    return words[n];
+  } else if (n < 20) {
+    return numberToWords(n - 10) + ' belas';
+  } else if (n < 100) {
+    return numberToWords(Math.floor(n / 10)) + ' puluh' + (n % 10 ? ' ' + numberToWords(n % 10) : '');
+  } else if (n < 1000) {
+    const hundreds = Math.floor(n / 100);
+    return (
+      (hundreds === 1 ? 'seratus' : numberToWords(hundreds) + ' ratus') +
+      (n % 100 ? ' ' + numberToWords(n % 100) : '')
+    );
+  } else if (n < 1000000) {
+    const thousands = Math.floor(n / 1000);
+    const remainder = n % 1000;
+    return (
+      (thousands === 1 ? 'seribu' : numberToWords(thousands) + ' ribu') +
+      (remainder ? ' ' + numberToWords(remainder) : '')
+    );
+  } else if (n < 1000000000) {
+    return (
+      numberToWords(Math.floor(n / 1000000)) +
+      ' juta' +
+      (n % 1000000 ? ' ' + numberToWords(n % 1000000) : '')
+    );
+  } else if (n < 10000000000) {
+    return (
+      numberToWords(Math.floor(n / 1000000000)) +
+      ' milyar' +
+      (n % 1000000000 ? ' ' + numberToWords(n % 1000000000) : '')
+    );
+  }
+  return '';
+}
 
 
+// Watcher untuk update terbilang berdasarkan input
+watch(
+  () => state.Biaya_Pekerjaan,
+  (newValue) => {
+    if (newValue !== null) {
+      state.terbilang_1 = numberToWords(newValue);
+    } else {
+      state.terbilang_1 = '';
+    }
+  }
+);
+watch(
+  () => state.Jangka_Waktu_Pelaksanaan,
+  (newValue) => {
+    if (newValue !== null) {
+      state.terbilang_2 = numberToWords(newValue);
+    } else {
+      state.terbilang_2 = '';
+    }
+  }
+);
 
+watch(
+  () => state.Jangka_Waktu_Pemeliharaan,
+  (newValue) => {
+    if (newValue !== null) {
+      state.terbilang_3 = numberToWords(newValue);
+    } else {
+      state.terbilang_3 = '';
+    }
+  }
+);
 
+watch(
+  () => state.TKDN,
+  (newValue) => {
+    if (newValue !== null) {
+      state.Terbilang_TKDN = numberToWords(newValue);
+    } else {
+      state.Terbilang_TKDN = '';
+    }
+  }
+);
+// watch(
+//   () => state.value.Pekerjaan,
+//   (newValue) => {
+//     state.value.Pekerjaan_UP = newValue.toUpperCase();
+//   }
+// );
+// const handleSubmit = () => {
+//   console.log("Payload:", {
+//     Pekerjaan: state.value.Pekerjaan, // Input Asli
+//     Pekerjaan_UP: state.value.Pekerjaan_UP, // Input Uppercase
+//   });
+// };
+
+// Fungsi untuk mengambil data dropdown dari Google Sheets
+async function fetchDropdownData() {
+  try {
+    const response = await $fetch('/api/gsheets'); // Panggil API untuk ambil data
+    state.dropdownOptions = response.data; // Simpan ke dropdownOptions
+  } catch (error) {
+    console.error('Error fetching dropdown data:', error);
+  }
+}
+onMounted(fetchDropdownData);
+
+// Panggil saat komponen dimuat
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const result = await $fetch('/api/generate-surat', {
     method: 'POST',
@@ -71,9 +179,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UInput v-model="state.Jenis_Tender_UP" />
       </UFormGroup>
 
-      <UFormGroup label="Nama Pekerjaan KAPITAL" name="Pekerjaan_UP">
+      <!-- <UFormGroup label="Nama Pekerjaan KAPITAL" name="Pekerjaan_UP">
         <UInput v-model="state.Pekerjaan_UP" />
-      </UFormGroup>
+      </UFormGroup> -->
 
       <UFormGroup label="Tanggal Email" name="Tanggal_Email">
         <UInput type="date" v-model="state.Tanggal_Email" />
@@ -88,7 +196,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </UFormGroup>
 
       <UFormGroup label="Perusahaan Pihak Kedua" name="Perusahaan_P2">
-        <UInput v-model="state.Perusahaan_P2" />
+        <select v-model="state.Perusahaan_P2" id="dropdown" class="form-select">
+          <option value="" disabled selected>Pilih Perusahaan</option>
+          <option v-for="(option, index) in state.dropdownOptions" :key="index" :value="option">
+            {{ option }}
+          </option>
+        </select>
       </UFormGroup>
 
       <UFormGroup label="Alamat Pihak Kedua" name="Alamat_P2">
@@ -99,15 +212,23 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UInput v-model="state.NPWP_P2" />
       </UFormGroup>
 
-      <UFormGroup label="Biaya Pekerjaan" name="Biaya_Pekerjaan">
+      <!-- <UFormGroup label="Biaya Pekerjaan" name="Biaya_Pekerjaan">
         <UInput v-model="state.Biaya_Pekerjaan" />
       </UFormGroup>
 
       <UFormGroup label="Terbilang Biaya Pekerjaan" name="terbilang_1">
         <UInput v-model="state.terbilang_1" />
-      </UFormGroup>
+      </UFormGroup> -->
 
-      <UFormGroup label="Jangka Waktu Pelaksanaan" name="Jangka_Waktu_Pelaksanaan">
+    <UFormGroup label="Biaya Pekerjaan" name="Biaya_Pekerjaan">
+      <UInput v-model="state.Biaya_Pekerjaan" type="number" />
+    </UFormGroup>
+
+    <UFormGroup label="Terbilang Biaya Pekerjaan" name="terbilang_1">
+      <UInput v-model="state.terbilang_1" readonly />
+    </UFormGroup>
+
+      <!-- <UFormGroup label="Jangka Waktu Pelaksanaan" name="Jangka_Waktu_Pelaksanaan">
         <UInput v-model="state.Jangka_Waktu_Pelaksanaan" />
       </UFormGroup>
 
@@ -129,7 +250,30 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
       <UFormGroup label="Terbilang TKDN" name="Terbilang_TKDN">
         <UInput v-model="state.Terbilang_TKDN" />
-      </UFormGroup>
+      </UFormGroup> -->
+        <!-- Jangka Waktu Pelaksanaan -->
+    <UFormGroup label="Jangka Waktu Pelaksanaan" name="Jangka_Waktu_Pelaksanaan">
+      <UInput v-model="state.Jangka_Waktu_Pelaksanaan" type="number" />
+    </UFormGroup>
+    <UFormGroup label="Terbilang Jangka Waktu Pelaksanaan" name="terbilang_2">
+      <UInput v-model="state.terbilang_2" readonly />
+    </UFormGroup>
+
+    <!-- Jangka Waktu Pemeliharaan -->
+    <UFormGroup label="Jangka Waktu Pemeliharaan" name="Jangka_Waktu_Pemeliharaan">
+      <UInput v-model="state.Jangka_Waktu_Pemeliharaan" type="number" />
+    </UFormGroup>
+    <UFormGroup label="Terbilang Jangka Waktu Pemeliharaan" name="terbilang_3">
+      <UInput v-model="state.terbilang_3" readonly />
+    </UFormGroup>
+
+    <!-- TKDN -->
+    <UFormGroup label="TKDN" name="TKDN">
+      <UInput v-model="state.TKDN" type="number" />
+    </UFormGroup>
+    <UFormGroup label="Terbilang TKDN" name="Terbilang_TKDN">
+      <UInput v-model="state.Terbilang_TKDN" readonly />
+    </UFormGroup>
 
       <UFormGroup label="Tanggal Penetapan" name="Tanggal_Penetapan">
         <UInput type="date" v-model="state.Tanggal_Penetapan" />
