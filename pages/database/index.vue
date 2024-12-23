@@ -1,46 +1,24 @@
 <template>
-  <div>
-    <Header /> <!-- Tambahkan komponen Header di sini -->
-    <div class="container">
+  <Container class="flex-1 flex flex-col justify-center pb-20">
+    <!-- <Header /> -->
+    <div class="flex flex-col justify-center items-center">
       <h1 class="title">Database</h1>
       <div class="button-container">
-        <button class="animated-button" @click="goToPejabat">Data Pejabat</button>
-        <button class="animated-button" @click="goToVendor">Data Vendor</button>
+        <NuxtLink class="animated-button" to="/database/pejabat">Data Pejabat</NuxtLink>
+        <NuxtLink class="animated-button" to="/database/vendor">Data Vendor</NuxtLink>
       </div>
     </div>
-  </div>
+  </Container>
 </template>
 
-<script>
-import Header from './header.vue'; // Pastikan mengimpor komponen Header
-
-export default {
-  components: {
-    Header, // Daftarkan komponen Header di sini
-  },
-  methods: {
-    goToPejabat() {
-      this.$router.push('/pejabat');
-    },
-    goToVendor() {
-      this.$router.push('/vendor');
-    },
-  },
-};
+<script lang="ts" setup>
+definePageMeta({
+  layout: 'dashboard',
+  middleware: 'auth',
+})
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Pusatkan secara vertikal */
-  align-items: center; /* Pusatkan secara horizontal */
-  height: 90vh; /* Sesuaikan tinggi untuk memberi ruang bagi header */
-  font-family: 'Poppins', sans-serif; /* Menggunakan font Poppins */
-}
-
 .title {
   font-size: 48px; /* Ukuran font besar untuk judul */
   font-weight: 600; /* Bobot font yang lebih tebal */

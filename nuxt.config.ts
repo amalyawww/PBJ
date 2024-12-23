@@ -4,7 +4,7 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03', // Tanggal kompatibilitas untuk versi Nuxt
   devtools: { enabled: true }, // Mengaktifkan devtools untuk pengembangan
-  modules: ['@nuxt/ui'], // Menggunakan modul UI Nuxt
+  modules: ['@nuxt/ui', '@pinia/nuxt'], // Menggunakan modul UI Nuxt
   build: {
     transpile: ['@phosphor-icons/vue'], // Add this line
   },

@@ -1,0 +1,27 @@
+// import { z } from 'zod';
+
+// export const DppFormInputSchema = z.object({
+//   Pekerjaan: z.string().min(1, 'Pekerjaan harus diisi!'),
+//   Pekerjaan_UP: z.string().min(1, 'Pekerjaan UP harus diisi!'),
+//   Tempat_Pelaksanaan_Pekerjaan: z.string().min(1, 'Tempat Pelaksanaan Pekerjaan harus diisi!'),
+//   Lokasi_Pelabuhan: z.string().min(1, 'Lokasi Pelabuhan harus diisi!'),
+//   Nilai_HPS: z.number().min(0, 'Nilai HPS harus diisi!'),
+//   Nomor_Paket: z.string().min(1, 'Nomor Paket harus diisi!'),
+//   Pejabat_Penandatangan: z.string().min(1, 'Pejabat Penandatangan harus diisi!'),
+//   Jangka_Waktu_Pekerjaan: z.number().min(0, 'Jangka Waktu Pekerjaan harus diisi!'),
+//   terbilang_1: z.string().min(1, 'Terbilang harus diisi!'),
+//   Jenis_Pengadaan: z.string().min(1, 'Jenis Pengadaan harus diisi!'),
+//   Pengadaan_untuk_Kegiatan: z.string().min(1, 'Pengadaan untuk Kegiatan harus diisi!'),
+//   Bidang_P2_1: z.string().min(1, 'Bidang P2 1 harus diisi!'),
+//   Bidang_P2_2: z.string().min(1, 'Bidang P2 2 harus diisi!'),
+//   Bidang_P2_3: z.string().min(1, 'Bidang P2 3 harus diisi!'),
+//   Pembayaran: z.string().min(1, 'Pembayaran harus diisi!'),
+//   Jenis_Kontrak: z.string().min(1, 'Jenis Kontrak harus diisi!'),
+//   Nilai_TKDN: z.number().min(0, 'Nilai TKDN harus diisi!'),
+//   terbilang_2: z.string().min(1, 'Terbilang harus diisi!'),
+//   Divisi_Pengguna: z.string().min(1, 'Divisi Pengguna harus diisi!'),
+//   Sub_Regional: z.string().min(1, 'Sub Regional harus diisi!'),
+//   Masa_Pemeliharaan: z.number().min(0, 'Masa Pemeliharaan harus diisi!'),
+//   terbilang_3: z.string().min(1, 'Terbilang harus diisi!'),
+//   Perusahaan_P2: z.string().min(1, 'Perusahaan P2 harus diisi!'),
+// });

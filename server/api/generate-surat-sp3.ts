@@ -187,19 +187,19 @@ export default defineEventHandler(async (event) => {
 //   };
 // });
 
-const templateDocumentIds = [
-  process.env.DOC_TEMPLATE_ID_1, // Template 1
-  process.env.DOC_TEMPLATE_ID_2, // Template 2
-  process.env.DOC_TEMPLATE_ID_3, // Template 3
-  process.env.DOC_TEMPLATE_ID_4, // Template 4
+const templateDocumentIdSP3 = [
+  process.env.DOC_TEMPLATE_ID_SP3_1, // Template 1
+  process.env.DOC_TEMPLATE_ID_SP3_2, // Template 2
+  process.env.DOC_TEMPLATE_ID_SP3_3, // Template 3
+  process.env.DOC_TEMPLATE_ID_SP3_4, // Template 4
 ];
 
 const generatedDocuments = []; // Menyimpan hasil proses
 
-for (let i = 0; i < templateDocumentIds.length; i++) {
+for (let i = 0; i < templateDocumentIdSP3.length; i++) {
   // Clone dokumen
   const cloned_document = await drive.files.copy({
-    fileId: templateDocumentIds[i],
+    fileId: templateDocumentIdSP3[i],
     requestBody: {
       name: `Hasil Generate ${i + 1}`, // Nama unik untuk setiap dokumen
     },

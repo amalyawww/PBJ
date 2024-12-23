@@ -4,6 +4,7 @@ import { z } from 'zod'
 import type { FormError, FormSubmitEvent } from '#ui/types'
 import { reactive } from 'vue';
 
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth',
@@ -112,9 +113,6 @@ const state = reactive({
     Nomor_BA_Klarif: '',
     Tanggal_BA_Klarif: '',
 });
-
-// State untuk daftar pejabat dari Google Sheets
-
 
 function numberToWords(n: number): string {
   const words: string[] = [
@@ -255,7 +253,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <div class="flex items-center gap-2">
           <UIcon name="ph:file-text" class="text-xl text-blue-500" />
           <h2 class="text-lg font-semibold">
-            Surat Perintah Penunjukan Penyedia Barang/Jasa
+            SP Konstruksi Anak Perusahaan
           </h2>
         </div>
       </template>
@@ -294,16 +292,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UInput v-model="state.Tahun" />
         </UFormGroup>
 
-        <!-- <UFormGroup label="Nama P1" name="Nama_P1">
-        <UInput v-model="state.Nama_P1" />
-        </UFormGroup> -->
-
         <UFormGroup label="Nama P1" name="Nama_P1">
-          <USelect v-model="state.Nama_P1" @change="fetchPejabatData">
-            <option v-for="pejabat in pejabatList" :key="pejabat.Nama" :value="pejabat.Nama">
-              {{ pejabat.Nama }}
-            </option>
-          </USelect>
+        <UInput v-model="state.Nama_P1" />
         </UFormGroup>
 
         <UFormGroup label="Jabatan P1" name="Jabatan_P1">
